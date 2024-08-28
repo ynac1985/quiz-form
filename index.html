@@ -58,27 +58,27 @@
             document.getElementById("result").innerText = result;
             document.getElementById("feedback").innerText = "Submitting your answers...";
 
-           fetch('https://script.google.com/macros/s/AKfycbz_ZsWM0meEa4JGHDtpjArNOBu_gZyUo8vWxboYuQeFpT5szd4dMmPSxvV7ZwbvrEo/exec', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        answer1: answer1.value,
-        answer2: answer2.value,
-        email: email
-    })
-})
-.then(response => response.json())
-.then(data => {
-    alert(data.message);
-    document.getElementById("feedback").innerText = "Email sent successfully!";
-})
-.catch(error => {
-    console.error('Error:', error);
-    document.getElementById("feedback").innerText = "Failed to send email. Please try again.";
-});
-
+            fetch('https://script.google.com/macros/s/AKfycbz_ZsWM0meEa4JGHDtpjArNOBu_gZyUo8vWxboYuQeFpT5szd4dMmPSxvV7ZwbvrEo/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    answer1: answer1.value,
+                    answer2: answer2.value,
+                    email: email
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById("feedback").innerText = "Email sent successfully!";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("feedback").innerText = "Failed to send email. Please try again.";
+            });
+        }
     </script>
 </body>
 </html>
