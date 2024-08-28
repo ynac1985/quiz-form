@@ -1,85 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logic-Based Quiz</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
-        .question { margin-bottom: 20px; }
-        #result { margin-top: 20px; font-weight: bold; }
-        #feedback { color: red; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <h1>Logic-Based Quiz</h1>
-    <form id="quizForm">
-        <div class="question">
-            <p>Question 1: What is your favorite color?</p>
-            <input type="radio" name="question1" value="A" required> Red<br>
-            <input type="radio" name="question1" value="B"> Blue<br>
-        </div>
-        <div class="question">
-            <p>Question 2: What is your favorite animal?</p>
-            <input type="radio" name="question2" value="A" required> Cat<br>
-            <input type="radio" name="question2" value="B"> Dog<br>
-        </div>
-        <div class="question">
-            <p>Your Email:</p>
-            <input type="email" id="email" required placeholder="Enter your email">
-        </div>
-        <button type="button" onclick="submitQuiz()">Submit</button>
-    </form>
-    
-    <p id="result"></p>
-    <p id="feedback"></p>
+function submitQuiz() {
+    var answer1 = document.querySelector('input[name="question1"]:checked');
+    var answer2 = document.querySelector('input[name="question2"]:checked');
+    var email = document.getElementById("email").value;
 
-    <!-- JavaScript must be placed here -->
-    <script>
-        function submitQuiz() {
-            var answer1 = document.querySelector('input[name="question1"]:checked');
-            var answer2 = document.querySelector('input[name="question2"]:checked');
-            var email = document.getElementById("email").value;
+    if (!answer1 || !answer2 || !email) {
+        document.getElementById("feedback").innerText = "Please answer all questions and provide your email.";
+        return;
+    }
 
-            if (!answer1 || !answer2 || !email) {
-                document.getElementById("feedback").innerText = "Please answer all questions and provide your email.";
-                return;
-            }
+    var result = "";
 
-            var result = "";
+    if (answer1.value === "A" && answer2.value === "A") {
+        result = "You are Type X!";
+    } else if (answer1.value === "B" && answer2.value === "B") {
+        result = "You are Type Y!";
+    } else {
+        result = "You are Type Z!";
+    }
 
-            if (answer1.value === "A" && answer2.value === "A") {
-                result = "You are Type X!";
-            } else if (answer1.value === "B" && answer2.value === "B") {
-                result = "You are Type Y!";
-            } else {
-                result = "You are Type Z!";
-            }
+    document.getElementById("result").innerText = result;
+    document.getElementById("feedback").innerText = "Submitting your answers...";
 
-            document.getElementById("result").innerText = result;
-            document.getElementById("feedback").innerText = "Submitting your answers...";
-
-            fetch('https://script.google.com/macros/s/AKfycbz_ZsWM0meEa4JGHDtpjArNOBu_gZyUo8vWxboYuQeFpT5szd4dMmPSxvV7ZwbvrEo/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    answer1: answer1.value,
-                    answer2: answer2.value,
-                    email: email
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                document.getElementById("feedback").innerText = "Email sent successfully!";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById("feedback").innerText = "Failed to send email. Please try again.";
-            });
-        }
-    </script>
-</body>
-</html>
+    // Change fetch to GET request with URL parameters
+    fetch(`https://script.google.com/macros/s/AKfycbz_ZsWM0meEa4JGHDtpjArNOBu_gZyUo8vWxboYuQeFpT5szd4dMmPSxvV7ZwbvrEo/exec?answer1=${encodeURIComponent(answer1.value)}&answer2=${encodeURIComponent(answer2.value)}&email=${encodeURIComponent(email)}`, {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        document.getElementById("feedback").innerText = "Email sent successfully!";
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("feedback").innerText = "Failed to send email. Please try again.";
+    });
+}
