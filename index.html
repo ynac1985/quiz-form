@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic-Based Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        .question { margin-bottom: 20px; }
+        #result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Logic-Based Quiz</h1>
+    <form id="quizForm">
+        <div class="question">
+            <p>Question 1: What is your favorite color?</p>
+            <input type="radio" name="question1" value="A" required> Red<br>
+            <input type="radio" name="question1" value="B"> Blue<br>
+        </div>
+        <div class="question">
+            <p>Question 2: What is your favorite animal?</p>
+            <input type="radio" name="question2" value="A" required> Cat<br>
+            <input type="radio" name="question2" value="B"> Dog<br>
+        </div>
+        <button type="button" onclick="submitQuiz()">Submit</button>
+    </form>
+    
+    <p id="result"></p>
+
+    <script>
+        function submitQuiz() {
+            var answer1 = document.querySelector('input[name="question1"]:checked');
+            var answer2 = document.querySelector('input[name="question2"]:checked');
+
+            if (!answer1 || !answer2) {
+                document.getElementById("result").innerText = "Please answer all questions.";
+                return;
+            }
+
+            var result = "";
+
+            if (answer1.value === "A" && answer2.value === "A") {
+                result = "You are Type X!";
+            } else if (answer1.value === "B" && answer2.value === "B") {
+                result = "You are Type Y!";
+            } else {
+                result = "You are Type Z!";
+            }
+
+            document.getElementById("result").innerText = result;
+
+            fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    answer1: answer1.value,
+                    answer2: answer2.value
+                })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
